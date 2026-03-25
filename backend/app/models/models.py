@@ -58,3 +58,8 @@ class Message(Base):
     # Relationships
     room = relationship("Room", back_populates="messages")
     sender = relationship("User", back_populates="messages")
+    
+    # Property for sender_username
+    @property
+    def sender_username(self):
+        return self.sender.username if self.sender else None
