@@ -13,6 +13,13 @@ class AuthService:
 
     def register_user(self, user_data: UserCreate) -> User:
         """Register a new user."""
+        # Validate password length (bcrypt limit is 72 bytes)
+        if len(user_data.password.encode('utf-8')) > 72:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Password too long. Maximum 72 characters allowed."
+            )
+        
         # Check if user already exists
         existing_user = self.db.query(User).filter(
             (User.username == user_data.username) | (User.email == user_data.email)
@@ -46,7 +53,16 @@ class AuthService:
 
     def authenticate_user(self, login_data: UserLogin) -> User:
         """Authenticate user and return user object."""
-        user = self.db.query(User).filter(User.username == login_data.username).first()
+        # Find user by username or email
+        if login_data.email:
+            user = self.db.query(User).filter(User.email == login_data.email).first()
+        elif login_data.username:
+            user = self.db.query(User).filter(User.username == login_data.username).first()
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username or email required"
+            )
         
         if not user or not verify_password(login_data.password, user.hashed_password):
             raise HTTPException(
