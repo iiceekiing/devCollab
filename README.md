@@ -1,6 +1,6 @@
-# 🧠 devCollab - Real-Time Collaboration Platform
+# 🧠 devCollab - Real-time Collaboration Platform
 
-A production-ready, full-stack real-time collaboration platform built with React, FastAPI, WebSockets, and Redis.
+A modern, full-stack real-time collaboration platform built with React and FastAPI, WebSockets, and Redis.
 
 ## 🎯 Overview
 
